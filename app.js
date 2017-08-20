@@ -263,9 +263,11 @@ server.listen(process.env.PORT || 3978, function()
    console.log('%s listening to %s', server.name, server.url); 
 });
 
-// Create chat bot
+// Create chat bot  
 var connector = new builder.ChatConnector
 ({ appId: '213c2245-3cb9-49a4-b852-41e4f6eea0b0', appPassword: '7WutpJBKjsXNAGALGVRMMiS' }); 
+//working code 
+/*
 var bot = new builder.UniversalBot(connector);
 server.post('/api/messages', connector.listen());
 
@@ -273,11 +275,45 @@ server.post('/api/messages', connector.listen());
 bot.dialog('/', function (session) {
     session.send("Hello World");
 });
+*/
+
+//new code for bot dialogs down till before server.get
+
 /*server.get('/', restify.serveStatic({
  directory: __dirname,
  default: '/index.html'
-}));
-*/
+}));*/
+
+//start of new code
+
+var bot = new builder.UniversalBot(connector, [
+    function (session) {
+        session.send("Welcome to the Servicenow BOT.");
+        session.send("what is your need");
+        session.send("A>Create an incident");
+        session.send("B>Close an incident");
+        builder.Prompts.text(session, "Reply A or B");
+      
+    },
+    
+    function (session, results) {
+        session.dialogData.yourAnswer = results.response;
+        builder.Prompts.text(session, "Describe your problem");
+    },
+    function (session, results) {
+        session.dialogData.description = results.response;
+
+        
+        session.send("An incident <incident number to be got from snow > has been created with description %s",session.dialogData.description);
+        
+        session.endDialog();
+    }
+]);
+server.post('/api/messages', connector.listen());
+
+
+//end of new code
+
 server.get('/', restify.plugins.serveStatic({
  directory: __dirname,
  default: '/index.html'
