@@ -299,14 +299,17 @@ var bot = new builder.UniversalBot(connector, [
     function (session, results) {
         session.dialogData.yourAnswer = results.response;
         if (session.dialogData.yourAnswer == 'A')
+            {
          builder.Prompts.text(session, "Describe your problem");
          session.dialogData.description = results.response;
           session.send(" Incident IncNumber has been created with description %s",session.dialogData.description);
-        
+            }
         else
+            {
          builder .Prompts.text(session,"Tell the incident number");  
-        session.send ("Incident number %s has been closed ",sessionStorage.message.text);
-       session.endDialog();        
+        session.send ("Incident number %s has been closed ",session.message.text);
+       session.endDialog(); 
+            }       
 
     },
    /* function (session, results) {
