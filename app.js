@@ -304,7 +304,7 @@ var bot = new builder.UniversalBot(connector, [
         session.dialogData.description = results.response;
 
         
-        session.send("An incident -incident number to be got from snow - has been created with description %s",session.dialogData.description);
+        session.send(" Incident IncNumber has been created with description %s",session.dialogData.description);
         
         session.endDialog();
     }
