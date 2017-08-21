@@ -299,19 +299,27 @@ var bot = new builder.UniversalBot(connector, [
     function (session, results) {
         session.dialogData.yourAnswer = results.response;
         if (session.dialogData.yourAnswer == 'A')
-            {
-         builder.Prompts.text(session, "Describe your problem");
-         session.dialogData.description = results.response;
-          session.send(" Incident IncNumber has been created with description %s",session.dialogData.description);
-            }
+        {   
+        // builder.Prompts.text(session, "Describe your problem");
+         //session.dialogData.description = results.response;
+         // session.send(" Incident IncNumber has been created with description %s",session.dialogData.description);
+        session.beginDialog('createIncident'); 
+        
+        }
+        
         else
-            {
-         builder .Prompts.text(session,"Tell the incident number");  
-        session.send ("Incident number %s has been closed ",session.message.text);
-       session.endDialog(); 
-            }       
-
-    },
+          {  
+        // builder .Prompts.text(session,"Tell the incident number");  
+       // session.send ("Incident number %s has been closed ",session.message.text);
+      // session.endDialog(); 
+      session.beginDialog('closeIncident');
+          }
+    },  
+     function(session,results)    
+     {
+    session.endDialog();
+     }
+    
    /* function (session, results) {
         session.dialogData.description = results.response;
 
@@ -321,6 +329,33 @@ var bot = new builder.UniversalBot(connector, [
         session.endDialog();
     } */
 ]);
+
+//Dialog to create an incident
+bot.dialog('createIncident',[
+    function(session){
+      builder .Prompts.text(session,"Describe your problem");  
+    },
+    function(session,results) {
+       session.dialogData.description = results.response; 
+       // session.endDialogWithResult(results);
+       session.send(" Incident IncNumber has been created with description %s",session.dialogData.description);
+        
+        session.endDialog();
+    }
+]);
+   
+  //dialog to close the incident
+  
+  bot.dialog('closeIncident',[
+   function(session){
+       builder.Prompts.text(session,"Tell the incident number"); 
+   } ,
+   function(session,results)  {
+       //session.endDialogWithResult(results);
+        session.send ("Incident number %s has been closed ",session.message.text);
+       session.endDialog(); 
+   }
+  ]);
 server.post('/api/messages', connector.listen());
 
 
