@@ -298,7 +298,12 @@ var bot = new builder.UniversalBot(connector, [
     
     function (session, results) {
         session.dialogData.yourAnswer = results.response;
-        builder.Prompts.text(session, "Describe your problem");
+        if (session.dialogData.yourAnswer == 'A')
+         builder.Prompts.text(session, "Describe your problem");
+        else
+         builder .Prompts.text(session,"Tell the incident number");  
+               
+
     },
     function (session, results) {
         session.dialogData.description = results.response;
