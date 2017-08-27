@@ -307,14 +307,20 @@ var bot = new builder.UniversalBot(connector, [
         
         }
         
-        else
+        else if (session.dialogData.yourAnswer == 'B')
           {  
         // builder .Prompts.text(session,"Tell the incident number");  
        // session.send ("Incident number %s has been closed ",session.message.text);
       // session.endDialog(); 
       session.beginDialog('closeIncident');
           }
-    },  
+       else 
+        {
+           // session.send ("Please type 'A' or 'B' ");
+           //builder.Prompts.text(session,"Please type 'A' or 'B' ");
+           session.beginDialog('checkResponse');
+    } 
+    },
      function(session,results)    
      {
     session.endDialog();
@@ -356,6 +362,35 @@ bot.dialog('createIncident',[
        session.endDialog(); 
    }
   ]);
+
+  //dialog to check the response
+
+  bot.dialog('checkResponse',[
+   function(session){
+       builder.Prompts.text(session,"Please type 'A' or 'B' ");
+    },
+  function(session,results)
+  {
+        session.dialogData.yourAnswer = results.response;
+        if (session.dialogData.yourAnswer == 'A')
+        {   
+       
+        session.beginDialog('createIncident'); 
+        
+        }
+        
+        else if (session.dialogData.yourAnswer == 'B')
+          {  
+      
+      session.beginDialog('closeIncident');
+          }
+     else 
+        {
+        
+           session.beginDialog('checkResponse');
+    } 
+  },
+  ])
 server.post('/api/messages', connector.listen());
 
 
